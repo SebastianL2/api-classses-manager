@@ -1,4 +1,43 @@
-import { Controller } from '@nestjs/common';
-
+import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { CreateClassDto } from './dto/create-class.dto';
+import { ClassesService } from './classes.service';
+import { UpdateClasstDto } from './dto/update-class.dto';
+import { AddTeacherDto } from './dto/add-teacher.dto';
+import { AddStudentDto } from './dto/add-student.dto';
 @Controller('classes')
-export class ClassesController {}
+export class ClassesController {
+
+    constructor(
+        private classService:ClassesService
+     ){}
+     
+     @Post()
+     createClass(@Body() classes: CreateClassDto) {
+       return this.classService.createClass(classes);
+     }
+     @Patch(':id/assign-teacher')
+     addTeacher(
+        @Param('id') classId: string,
+        @Body() teacherId: AddTeacherDto
+    ) {
+       return this.classService.addTeacherToClass(classId,teacherId.id);
+     }
+
+    @Patch(':id/assign-students')
+    async addStudents(
+        @Param('id') classId: string,
+        @Body() studentsId: AddStudentDto
+    ) {
+        studentsId.id.forEach(id => {
+          return  this.classService.addStudentsToClass(classId,id);
+        });
+    
+     }
+
+
+     @Get()
+     getClasses(){
+       return this.classService.getClasses()
+     }
+
+}

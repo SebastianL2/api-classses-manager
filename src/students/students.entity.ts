@@ -1,4 +1,5 @@
-import { Entity,Column, PrimaryGeneratedColumn } from "typeorm"
+import { Class } from "src/classes/classes.entity"
+import { Entity,Column, PrimaryGeneratedColumn, ManyToMany } from "typeorm"
 
 @Entity()
 export class Student {
@@ -12,6 +13,9 @@ export class Student {
  email:string
  @Column({type:'timestamp',default: () => 'CURRENT_TIMESTAMP'})
  createdAt: Date
+
+ @ManyToMany(() => Class, clas => clas.students)
+ classes: Class[];
 
 
 }
