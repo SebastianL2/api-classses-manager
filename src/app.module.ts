@@ -3,6 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { StudentsModule } from './students/students.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { TeachersModule } from './teachers/teachers.module';
+import { ClassModule } from './class/class.module';
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: 'mysql',
@@ -14,7 +16,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     entities: [__dirname+'/**/*.entity{.ts,.js}'],
     synchronize: true,
   }),
-  StudentsModule],
+  StudentsModule,
+  TeachersModule,
+  ClassModule],
   controllers: [AppController],
   providers: [AppService],
 })
