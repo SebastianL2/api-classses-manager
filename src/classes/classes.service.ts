@@ -10,98 +10,130 @@ import { UpdateClasstDto } from './dto/update-class.dto';
 @Injectable()
 export class ClassesService {
     constructor(
-        @InjectRepository(Class) private classRepostory:Repository<Class>,
+        @InjectRepository(Class) private classRepository:Repository<Class>,
         private teachersService: TeachersService,
-        private studentService: StudentsService
+        private studentsService: StudentsService
     ){}
 
     private readonly logger = new Logger(ClassesService.name);
-
-
-    async createClass(classes:CreateClassDto){
-        const newClass = this.classRepostory.create(classes);
-        return this.classRepostory.save(newClass);
-    }
-
-    async addTeacherToClass(id:string,id_teacher:string){
-        const teacherSearch = await this.teachersService.getTeacher(id_teacher);
-        if(!teacherSearch) return new HttpException('teacher not found',HttpStatus.NOT_FOUND)
-
-        const classSearch = await this.getClass(id);
-        if(!classSearch) return new HttpException('id class not found',HttpStatus.NOT_FOUND) 
-        classSearch.teacher = teacherSearch;
-        return this.classRepostory.update({id},classSearch);
-    }
-
-
-    async addStudentsToClass(classId:string,id_student:string){
-        const studentSearch = await this.studentService.getStudent(id_student);
-        if(!studentSearch) return new HttpException('id student not found',HttpStatus.NOT_FOUND)
-
-        const classSearch = await this.getClass2(classId);
-        if(!classSearch) return new HttpException('id class not found',HttpStatus.NOT_FOUND) 
-           
-        classSearch.students.push(studentSearch);
-      
-        if (!classSearch.students) {
-            classSearch.students = [];
+    async createClass(classes: CreateClassDto) {
+        try {
+          const newClass = this.classRepository.create(classes);
+          return await this.classRepository.save(newClass);
+        } catch (error) {
+          this.logger.error(`Error creating class: ${error.message}`);
+          throw new HttpException('Error creating class', HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return this.classRepostory.save(classSearch);
-    }
-    updateClass(id:string,clas:UpdateClasstDto){
-        return this.classRepostory.update({id},clas);
-    }
-    async getClass(id:string){
-        try {
-        return  this.classRepostory.findOne({
-            where:{
-                id
-            },
-            relations:['teacher','students']
-        })
-        } catch (error) {
-        this.logger.error(`Error fetching comment: ${error}`);
-        throw error;
       }
-    }
-
-    async getClass2(id:string){
-        try {
-        return  this.classRepostory.findOne({
-            where:{
-                id
-            },
-            relations:['students']
-        })
-        } catch (error) {
-        this.logger.error(`Error fetching comment: ${error}`);
-        throw error;
-      }
-    }
     
-    async getStudentsByClass(id:string){
-       try {
-        const classWithStudents= await this.classRepostory.findOne({
-            where:{
-                id
-            },
-            relations:['students']
-        })
-        if (!classWithStudents) {
+      async addTeacherToClass(id: string, id_teacher: string) {
+        try {
+          const teacherSearch = await this.teachersService.getTeacher(id_teacher);
+          if (!teacherSearch) {
+            throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+          }
+    
+          const classSearch = await this.getClass(id);
+          if (!classSearch) {
             throw new HttpException('Class not found', HttpStatus.NOT_FOUND);
+          }
+    
+          classSearch.teacher = teacherSearch;
+          return await this.classRepository.update({ id }, classSearch);
+        } catch (error) {
+          this.logger.error(`Error adding teacher to class: ${error.message}`);
+          throw new HttpException('Error adding teacher to class', HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return classWithStudents.students;
-       } catch (error) {
-        this.logger.error(`Error fetching comment: ${error}`);
-        throw error;
-       }
+      }
+    
+      async addStudentsToClass(classId: string, id_student: string) {
+        try {
+          const studentSearch = await this.studentsService.getStudent(id_student);
+          if (!studentSearch) {
+            throw new HttpException('Student not found', HttpStatus.NOT_FOUND);
+          }
+    
+          const classSearch = await this.getClass2(classId);
+          if (!classSearch) {
+            throw new HttpException('Class not found', HttpStatus.NOT_FOUND);
+          }
+    
+          if (!classSearch.students) {
+            classSearch.students = [];
+          }
+          classSearch.students.push(studentSearch);
+    
+          return await this.classRepository.save(classSearch);
+        } catch (error) {
+          this.logger.error(`Error adding student to class: ${error.message}`);
+          throw new HttpException('Error adding student to class', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+    
+      async updateClass(id: string, clas: UpdateClasstDto) {
+        try {
+          return await this.classRepository.update({ id }, clas);
+        } catch (error) {
+          this.logger.error(`Error updating class: ${error.message}`);
+          throw new HttpException('Error updating class', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+    
+      async getClass(id: string) {
+        try {
+          return await this.classRepository.findOne({
+            where: {
+              id,
+            },
+            relations: ['teacher', 'students'],
+          });
+        } catch (error) {
+          this.logger.error(`Error fetching class: ${error.message}`);
+          throw new HttpException('Error fetching class', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+    
+      async getClass2(id: string) {
+        try {
+          return await this.classRepository.findOne({
+            where: {
+              id,
+            },
+            relations: ['students'],
+          });
+        } catch (error) {
+          this.logger.error(`Error fetching class: ${error.message}`);
+          throw new HttpException('Error fetching class', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+    
+      async getStudentsByClass(id: string) {
+        try {
+          const classWithStudents = await this.classRepository.findOne({
+            where: {
+              id,
+            },
+            relations: ['students'],
+          });
+          if (!classWithStudents) {
+            throw new HttpException('Class not found', HttpStatus.NOT_FOUND);
+          }
+    
+          return classWithStudents.students;
+        } catch (error) {
+          this.logger.error(`Error fetching students by class: ${error.message}`);
+          throw new HttpException('Error fetching students by class', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+    
+      async getClasses() {
+        try {
+          return await this.classRepository.find({
+            relations: ['teacher', 'students'],
+          });
+        } catch (error) {
+          this.logger.error(`Error fetching classes: ${error.message}`);
+          throw new HttpException('Error fetching classes', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
     }
-    async getClasses(){
-        return await this.classRepostory.find({
-            relations:['teacher','students']
-        })
-    }
-
-
-}
