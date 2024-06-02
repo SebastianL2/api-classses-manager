@@ -5,6 +5,7 @@ import { StudentsModule } from './students/students.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TeachersModule } from './teachers/teachers.module';
 import { ClassesModule } from './classes/classes.module';
+
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: 'mysql',
@@ -15,6 +16,7 @@ import { ClassesModule } from './classes/classes.module';
     database: 'classesdb',
     entities: [__dirname+'/**/*.entity{.ts,.js}'],
     synchronize: true,
+    
   }),
   StudentsModule,
   TeachersModule,
