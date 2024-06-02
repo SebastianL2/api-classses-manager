@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { TeachersService } from 'src/teachers/teachers.service';
 import { Class } from './classes.entity';
 import { StudentsService } from 'src/students/students.service';
+import { UpdateClasstDto } from './dto/update-class.dto';
 @Injectable()
 export class ClassesService {
     constructor(
@@ -47,13 +48,16 @@ export class ClassesService {
         }
         return this.classRepostory.save(classSearch);
     }
-
+    updateClass(id:string,clas:UpdateClasstDto){
+        return this.classRepostory.update({id},clas);
+    }
     async getClass(id:string){
         try {
         return  this.classRepostory.findOne({
             where:{
                 id
-            }
+            },
+            relations:['teacher','students']
         })
         } catch (error) {
         this.logger.error(`Error fetching comment: ${error}`);
@@ -74,12 +78,30 @@ export class ClassesService {
         throw error;
       }
     }
+    
+    async getStudentsByClass(id:string){
+       try {
+        const classWithStudents= await this.classRepostory.findOne({
+            where:{
+                id
+            },
+            relations:['students']
+        })
+        if (!classWithStudents) {
+            throw new HttpException('Class not found', HttpStatus.NOT_FOUND);
+        }
 
+        return classWithStudents.students;
+       } catch (error) {
+        this.logger.error(`Error fetching comment: ${error}`);
+        throw error;
+       }
+    }
     async getClasses(){
         return await this.classRepostory.find({
             relations:['teacher','students']
         })
     }
-    
+
 
 }

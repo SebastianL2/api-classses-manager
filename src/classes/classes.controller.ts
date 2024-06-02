@@ -15,6 +15,25 @@ export class ClassesController {
      createClass(@Body() classes: CreateClassDto) {
        return this.classService.createClass(classes);
      }
+
+     @Put(':id')
+     updateClasss(@Param('id') id: string,@Body() classes:UpdateClasstDto) {
+        return this.classService.updateClass(id,classes);
+     }
+    @Get(':id/students')
+     getClassByStudents(@Param('id') id:string){
+      return this.classService.getStudentsByClass(id);
+     }
+
+     @Get()
+     getClasses(){
+       return this.classService.getClasses()
+     }
+     @Get(':id')
+     getCalss(@Param('id') id:string){
+      return this.classService.getClass(id)  
+     }
+
      @Patch(':id/assign-teacher')
      addTeacher(
         @Param('id') classId: string,
@@ -35,9 +54,5 @@ export class ClassesController {
      }
 
 
-     @Get()
-     getClasses(){
-       return this.classService.getClasses()
-     }
 
 }
