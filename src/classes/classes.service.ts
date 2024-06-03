@@ -53,7 +53,7 @@ export class ClassesService {
             throw new HttpException('Student not found', HttpStatus.NOT_FOUND);
           }
     
-          const classSearch = await this.getClass2(classId);
+          const classSearch = await this.getClassWithStudents(classId);
           if (!classSearch) {
             throw new HttpException('Class not found', HttpStatus.NOT_FOUND);
           }
@@ -93,7 +93,7 @@ export class ClassesService {
         }
       }
     
-      async getClass2(id: string) {
+      async getClassWithStudents(id: string) {
         try {
           return await this.classRepository.findOne({
             where: {

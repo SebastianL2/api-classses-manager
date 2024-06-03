@@ -15,10 +15,13 @@ export class Student {
  createdAt: Date
 
  @ManyToMany(() => Class, clas => clas.students,{
+    cascade: ['insert', 'update'],
     onDelete:'CASCADE',
     onUpdate:'CASCADE'
  })
  classes: Class[];
+
+ 
 
 
 }
