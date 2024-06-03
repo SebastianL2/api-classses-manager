@@ -16,13 +16,15 @@ export class StudentsService {
       const verifyEmail = await this.studentRepository.findOne({ where: { email: student.email } });
       if (verifyEmail) {
         return {
-          message: 'email already exists please create another ',
+          succes: false,
+          message: 'email already exists please create another '
         };
       } else {
         const newStudent = this.studentRepository.create(student);
         await this.studentRepository.save(newStudent);
         return {
-          message: 'Student created successfully',
+          succes: true,
+          message: 'Student created successfully'
         };
       }
     } catch (error) {

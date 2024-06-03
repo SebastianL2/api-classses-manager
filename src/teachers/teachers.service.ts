@@ -20,12 +20,14 @@ export class TeachersService {
       });
       if (verifyEmail) {
         return {
+          succes: false,
           message: 'email already exists please create another ',
         };
       }
       const newTeacher = this.teacherRepository.create(teacher);
       await this.teacherRepository.save(newTeacher);
       return {
+        succes: true,
         message: 'Teacher created successfully',
       };
     } catch (error) {

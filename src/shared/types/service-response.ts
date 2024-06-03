@@ -1,1 +1,1 @@
-export type ServiceResponse = { message: string };
+export type ServiceResponse = {succes:boolean, message: string };
