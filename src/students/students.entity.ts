@@ -14,7 +14,10 @@ export class Student {
  @Column({type:'timestamp',default: () => 'CURRENT_TIMESTAMP'})
  createdAt: Date
 
- @ManyToMany(() => Class, clas => clas.students)
+ @ManyToMany(() => Class, clas => clas.students,{
+    onDelete:'CASCADE',
+    onUpdate:'CASCADE'
+ })
  classes: Class[];
 
 
