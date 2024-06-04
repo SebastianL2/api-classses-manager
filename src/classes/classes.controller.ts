@@ -34,6 +34,11 @@ export class ClassesController {
       return this.classService.getClass(id)  
      }
 
+     @Get(':id/teacher')
+     getCalssByTeachers(@Param('id') id:string){
+      return this.classService.getCalssesByTeachers(id)  
+     }
+     
      @Patch(':id/assign-teacher')
      addTeacher(
         @Param('id') classId: string,

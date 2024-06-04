@@ -125,6 +125,28 @@ export class ClassesService {
           throw new HttpException('Error fetching students by class', HttpStatus.INTERNAL_SERVER_ERROR);
         }
       }
+      async getCalssesByTeachers(id: string) {
+        console.log(id)
+        try {
+          const classes = await this.classRepository.find({
+            where: {
+              teacher: {
+                id: id,
+              },
+            },
+            relations: ['teacher'],
+          });
+          if (!classes) {
+            throw new HttpException('Class not found', HttpStatus.NOT_FOUND);
+          }
+          
+          return classes;
+        } catch (error) {
+          this.logger.error(`Error fetching students by class: ${error.message}`);
+          throw new HttpException('Error fetching students by class', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+    
     
       async getClasses() {
         try {
