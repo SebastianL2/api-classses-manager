@@ -39,7 +39,7 @@ export class ClassesService {
           }
     
           classSearch.teacher = teacherSearch;
-          return await this.classRepository.update({ id }, classSearch);
+          return await this.classRepository.save(classSearch);
         } catch (error) {
           this.logger.error(`Error adding teacher to class: ${error.message}`);
           throw new HttpException('Error adding teacher to class', HttpStatus.INTERNAL_SERVER_ERROR);
