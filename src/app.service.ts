@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'API Rest Classes Managment';
+    return 'Welcome to API Rest Classes Managment';
   }
 }

@@ -4,6 +4,8 @@ import { StudentsService } from './students.service';
 import { Student } from './students.entity';
 import { UpdateStudentDto } from './dto/update-student.dto';
 import { ServiceResponse } from 'src/shared/types/service-response';
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Students')
 @Controller('students')
 export class StudentsController {
     

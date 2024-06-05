@@ -4,7 +4,9 @@ import { TeachersService } from './teachers.service';
 import { CreateTeacherDto } from './dto/create-teacher.dto';
 import { Teacher } from './teacher.entity';
 import { UpdateTeacherDto } from './dto/update-teacher.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Teachers')
 @Controller('teachers')
 export class TeachersController {
     constructor(private TeachersService: TeachersService ){}

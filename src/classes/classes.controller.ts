@@ -4,6 +4,8 @@ import { ClassesService } from './classes.service';
 import { UpdateClasstDto } from './dto/update-class.dto';
 import { AddTeacherDto } from './dto/add-teacher.dto';
 import { AddStudentDto } from './dto/add-student.dto';
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('Classes')
 @Controller('classes')
 export class ClassesController {
 
