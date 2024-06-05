@@ -40,7 +40,7 @@ export class ClassesService {
           throw new HttpException('Error creating class', HttpStatus.INTERNAL_SERVER_ERROR);
         }
       }
-
+      
       async addTeacherToClass(id: string, id_teacher: string):Promise<ServiceResponse>  {
         try {
           const teacherSearch = await this.teachersService.getTeacher(id_teacher);
@@ -185,6 +185,20 @@ export class ClassesService {
         } catch (error) {
           this.logger.error(`Error fetching classes: ${error.message}`);
           throw new HttpException('Error fetching classes', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
+
+
+      async deleteClass(id: string):Promise<ServiceResponse> {
+        try {
+           await this.classRepository.delete({ id });
+           return {
+            succes: true,
+            message: 'Class deleted successfully',
+          };
+        } catch (error) {
+          this.logger.error(`Error deleting student: ${error.message}`);
+          throw new HttpException('Error deleting student', HttpStatus.INTERNAL_SERVER_ERROR);
         }
       }
     }

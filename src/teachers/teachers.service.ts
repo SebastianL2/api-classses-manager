@@ -58,18 +58,26 @@ export class TeachersService {
     }
   }
 
-  async updateTeacher(id: string, teacher: UpdateTeacherDto) {
+  async updateTeacher(id: string, teacher: UpdateTeacherDto): Promise<ServiceResponse> {
     try {
-      return await this.teacherRepository.update({ id }, teacher);
+      await this.teacherRepository.update({ id }, teacher);
+      return {
+        succes: true,
+        message: 'Teacher updated successfully',
+      };
     } catch (error) {
       this.logger.error(`Error updating teacher: ${error.message}`);
       throw new HttpException('Error updating teacher', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async deleteTeacher(id: string) {
+  async deleteTeacher(id: string): Promise<ServiceResponse>  {
     try {
-      return await this.teacherRepository.delete({ id });
+       await this.teacherRepository.delete({ id });
+       return {
+        succes: true,
+        message: 'Teacher deleted successfully',
+      };
     } catch (error) {
       this.logger.error(`Error deleting teacher: ${error.message}`);
       throw new HttpException('Error deleting teacher', HttpStatus.INTERNAL_SERVER_ERROR);

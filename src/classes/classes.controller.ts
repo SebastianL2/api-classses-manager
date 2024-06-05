@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { CreateClassDto } from './dto/create-class.dto';
 import { ClassesService } from './classes.service';
 import { UpdateClasstDto } from './dto/update-class.dto';
@@ -32,6 +32,11 @@ export class ClassesController {
      @Get(':id')
      getCalss(@Param('id') id:string){
       return this.classService.getClass(id)  
+     }
+
+     @Delete(':id')
+     deleteStudent(@Param('id') id:string){
+       return  this.classService.deleteClass(id)
      }
 
      @Get(':id/teacher')
