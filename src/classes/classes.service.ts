@@ -155,7 +155,7 @@ export class ClassesService {
         }
       }
       async getCalssesByTeachers(id: string) {
-        console.log(id)
+     
         try {
           const classes = await this.classRepository.find({
             where: {
