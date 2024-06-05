@@ -7,6 +7,8 @@ import { TeachersService } from 'src/teachers/teachers.service';
 import { Class } from './classes.entity';
 import { StudentsService } from 'src/students/students.service';
 import { UpdateClasstDto } from './dto/update-class.dto';
+import { ServiceResponse } from 'src/shared/types/service-response';
+import { Response } from 'express';
 @Injectable()
 export class ClassesService {
     constructor(
@@ -16,22 +18,37 @@ export class ClassesService {
     ){}
 
     private readonly logger = new Logger(ClassesService.name);
-    async createClass(classes: CreateClassDto) {
+    async createClass(classes: CreateClassDto):Promise<ServiceResponse> {
         try {
-          const newClass = this.classRepository.create(classes);
-          return await this.classRepository.save(newClass);
+          const verifyName = await this.classRepository.findOne({ where: { name: classes.name } });
+          if (verifyName) {
+            return {
+              succes: false,
+              message: 'class name already exists please create another '
+            };
+          } else {
+            const newClass = this.classRepository.create(classes);
+            await this.classRepository.save(newClass);
+            return {
+              succes: true,
+              message: 'Class created successfully'
+            };
+          }
+          
         } catch (error) {
           this.logger.error(`Error creating class: ${error.message}`);
           throw new HttpException('Error creating class', HttpStatus.INTERNAL_SERVER_ERROR);
         }
       }
-    
-      async addTeacherToClass(id: string, id_teacher: string) {
+
+      async addTeacherToClass(id: string, id_teacher: string):Promise<ServiceResponse>  {
         try {
           const teacherSearch = await this.teachersService.getTeacher(id_teacher);
-          if (!teacherSearch) {
+          if (!teacherSearch) {  
             throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+            
           }
+
     
           const classSearch = await this.getClass(id);
           if (!classSearch) {
@@ -39,14 +56,18 @@ export class ClassesService {
           }
     
           classSearch.teacher = teacherSearch;
-          return await this.classRepository.save(classSearch);
+          await this.classRepository.save(classSearch);
+           return {
+            succes: true,
+            message: 'Class added successfully'
+          };
         } catch (error) {
           this.logger.error(`Error adding teacher to class: ${error.message}`);
-          throw new HttpException('Error adding teacher to class', HttpStatus.INTERNAL_SERVER_ERROR);
+          throw new HttpException(`Error adding teacher to class: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
         }
       }
     
-      async addStudentsToClass(classId: string, id_student: string) {
+      async addStudentsToClass(classId: string, id_student: string):Promise<ServiceResponse> {
         try {
           const studentSearch = await this.studentsService.getStudent(id_student);
           if (!studentSearch) {
@@ -63,16 +84,24 @@ export class ClassesService {
           }
           classSearch.students.push(studentSearch);
     
-          return await this.classRepository.save(classSearch);
+           await this.classRepository.save(classSearch);
+           return {
+            succes: true,
+            message: 'Student added successfully'
+           };
         } catch (error) {
           this.logger.error(`Error adding student to class: ${error.message}`);
           throw new HttpException('Error adding student to class', HttpStatus.INTERNAL_SERVER_ERROR);
         }
       }
     
-      async updateClass(id: string, clas: UpdateClasstDto) {
+      async updateClass(id: string, clas: UpdateClasstDto):Promise<ServiceResponse> {
         try {
-          return await this.classRepository.update({ id }, clas);
+           await this.classRepository.update({ id }, clas);
+           return {
+            succes: true,
+            message: 'Class updated successfully'
+           };
         } catch (error) {
           this.logger.error(`Error updating class: ${error.message}`);
           throw new HttpException('Error updating class', HttpStatus.INTERNAL_SERVER_ERROR);
