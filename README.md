@@ -32,6 +32,17 @@
 $ pnpm install
 ```
 
+
+# Enviroment variables
+```
+DB_HOST='localhost'
+DB_PORT=3306
+DB_USERNAME='usuario'
+DB_PASSWORD='contraseña'
+DB_DATABASE='basededatos'
+
+```
+
 ## Running the app
 
 ```bash
