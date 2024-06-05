@@ -57,9 +57,8 @@ export class ClassesController {
         @Param('id') classId: string,
         @Body() studentsId: AddStudentDto
     ) {
-        studentsId.id.forEach(id => {
-          return  this.classService.addStudentsToClass(classId,id);
-        });
+          return  this.classService.addStudentsToClass(classId,studentsId.id);
+      
     
      }
 

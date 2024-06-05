@@ -1,4 +1,4 @@
 export class AddStudentDto{
-    id:string[]
+    id:string
     
 }
