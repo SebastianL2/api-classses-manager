@@ -10,7 +10,7 @@ export class Teacher {
  last_name:string
  @Column({unique:true})
  email:string
- @Column()
+ @Column({ nullable: true })
  url:string
  
  @Column({type:'timestamp',default: () => 'CURRENT_TIMESTAMP'})

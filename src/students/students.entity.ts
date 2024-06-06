@@ -7,7 +7,7 @@ export class Student {
  id:string
  @Column()
  name:string
- @Column()
+ @Column({ nullable: true })
  url:string
  @Column()
  last_name:string
