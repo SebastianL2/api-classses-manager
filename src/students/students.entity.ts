@@ -8,6 +8,8 @@ export class Student {
  @Column()
  name:string
  @Column()
+ url:string
+ @Column()
  last_name:string
  @Column({unique:true})
  email:string

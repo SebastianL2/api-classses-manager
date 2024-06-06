@@ -10,6 +10,8 @@ export class Class {
  name:string
  @Column()
  description:string
+ @Column()
+ url:string
 
  @ManyToOne(()=>Teacher,(teacher)=> teacher.id,
  {
